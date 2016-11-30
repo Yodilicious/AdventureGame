@@ -19,7 +19,9 @@ namespace AdventureGame.Main
         StartScreen startScreen;
         ActionScreen actionScreen;
 
+        private Texture2D backgroundImage;
         private Background background;
+
         
         public AdventureGame()
         {
@@ -62,9 +64,11 @@ namespace AdventureGame.Main
             actionScreen = new ActionScreen(this, spriteBatch);
             Components.Add(actionScreen);
 
+            Texture2D first = Content.Load<Texture2D>("backgrounds/landscape1");
+            Texture2D second = Content.Load<Texture2D>("backgrounds/landscape");
             Utility.HilightFont = Content.Load<SpriteFont>("fonts/hilightFont");
 
-            var backgroundImage = Content.Load<Texture2D>("backgrounds/main_menu_background");
+            backgroundImage = Content.Load<Texture2D>("backgrounds/main_menu_background");
             background = new Background(backgroundImage, new Rectangle(0, 0, 1024, 768));
 
             HideAllScreens();

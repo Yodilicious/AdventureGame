@@ -8,14 +8,21 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using MonogameLevel;
-using MonogameLevel.Helpers;
 
 namespace AdventureGame.Main.Screens
 {
     public class ActionScreen : GameScreen
     {
+        private const int MAX_STAGE = 2;
         private LevelManager levelManager;
         private Dictionary<Vector2, Tile> level;
+        private int _stage;
+        private string[] _strLevel =new string[MAX_STAGE]
+        {
+            "Levels/FirstLevel.lvl",
+            "Levels/SecondLevel.lvl"
+        };
+
 
         protected bool _initated;
 
@@ -32,6 +39,8 @@ namespace AdventureGame.Main.Screens
         protected KeyboardState oldKey;
         private Background scrolling1;
         private Background scrolling2;
+        private bool _stageFinished;
+        
         //protected InputManager _inputManager =
         //    new InputManager()
         //    {
@@ -62,13 +71,21 @@ namespace AdventureGame.Main.Screens
             _status = new StatusBar(Game, _player);
             _spriteFont = Game.Content.Load<SpriteFont>("fonts/hilightFont");
             levelManager = new LevelManager(Game.Content.Load<Texture2D>("levels/game_sprite_level"));
-            level = levelManager.LoadLevel("Levels/SecondLevel.lvl");
+            level = levelManager.LoadLevel(_strLevel[_stage]);
             _positionManager = new PositionManager(level, _player);
-            Texture2D first = Game.Content.Load<Texture2D>("backgrounds/level_background");
-            Texture2D second = Game.Content.Load<Texture2D>("backgrounds/level_background");
+            Texture2D first = Game.Content.Load<Texture2D>("backgrounds/landscape1");
+            Texture2D second = Game.Content.Load<Texture2D>("backgrounds/landscape");
             scrolling1 = new Background(first, new Rectangle(0, 0, 1024, 768));
             scrolling2 = new Background(second, new Rectangle(1024, 0, 1024, 768));
             base.Initialize();
+        }
+
+        private void loadStage()
+        {
+            _stageFinished = false;
+            level = levelManager.LoadLevel(_strLevel[++_stage]);
+            _player.setPosition(_positionManager.getInitialPosition(_stage));
+            
         }
 
         public override void Update(GameTime gameTime)
@@ -76,8 +93,18 @@ namespace AdventureGame.Main.Screens
             if (Enabled)
             {
                 if (!_initated) Initialize();
-
                 //user input management
+                if (_player.getBoundToCheckCollision().X > 200)
+                {
+                    _stageFinished = true;
+                }
+
+                if (_stageFinished)
+                {
+                    if(_stage != MAX_STAGE -1)
+                        loadStage();
+                }
+                
                 KeyboardState ks = Keyboard.GetState();
 
                 MoveDirection tempDirection = MoveDirection.None;
@@ -99,8 +126,6 @@ namespace AdventureGame.Main.Screens
                 {
                     tempDirection = MoveDirection.RunningLeft;
                 }
-
-
                 
                 if (ks.IsKeyDown(Keys.Space))
                 {
@@ -126,8 +151,8 @@ namespace AdventureGame.Main.Screens
                 oldKey = ks;
 
                 //Only when stage 1
-
-                generateScrollingEnemy();
+                if(_stage == 0)
+                    generateScrollingEnemy();
 
                 _collisionManager.checkAllCollision();
                 _status.Update();
@@ -148,6 +173,7 @@ namespace AdventureGame.Main.Screens
                 _enemies.Add(new ScrollingEnemy(Game.Content.Load<Texture2D>("enemies/enemy1"), _player, 2));
             }
         }
+
 
         public override void Draw(GameTime gameTime)
         {
@@ -217,7 +243,5 @@ namespace AdventureGame.Main.Screens
                 }
             }
         }
-
-        
     }
 }

@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AdventureGame.cs" />
-    <Compile Include="GameManagers\Background.cs" />
+    <Compile Include="Background.cs" />
     <Compile Include="Characters\Character.cs" />
     <Compile Include="Characters\Enemy.cs" />
     <Compile Include="Characters\Player.cs" />
@@ -55,8 +55,8 @@
     <Compile Include="Items\Life.cs" />
     <Compile Include="Items\Weapon.cs" />
     <Compile Include="GameManagers\InputManager.cs" />
-    <Compile Include="GameManagers\LevelManager.cs" />
-    <Compile Include="Screens\MenuComponent.cs" />
+    <Compile Include="LevelManager.cs" />
+    <Compile Include="MenuComponent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\AboutScreen.cs" />
@@ -67,11 +67,11 @@
     <Compile Include="Screens\ScoreScreen.cs" />
     <Compile Include="Screens\StartScreen.cs" />
     <Compile Include="Screens\StatusBar.cs" />
-    <Compile Include="GameManagers\ScrollingBackground.cs" />
-    <Compile Include="GameManagers\Tile.cs" />
-    <Compile Include="GameManagers\TileManager.cs" />
-    <Compile Include="Helpers\Utility.cs" />
-    <Compile Include="Helpers\Values.cs" />
+    <Compile Include="ScrollingBackground.cs" />
+    <Compile Include="Tile.cs" />
+    <Compile Include="TileManager.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Values.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
