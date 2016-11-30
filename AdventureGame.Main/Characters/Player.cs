@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using AdventureGame.Main.Items;
 using MonogameLevel;
+using MonogameLevel.Helpers;
 
 namespace AdventureGame.Main.Characters
 {

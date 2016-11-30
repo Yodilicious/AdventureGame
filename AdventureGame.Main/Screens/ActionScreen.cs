@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using MonogameLevel;
+using MonogameLevel.Helpers;
 
 namespace AdventureGame.Main.Screens
 {
@@ -63,8 +64,8 @@ namespace AdventureGame.Main.Screens
             levelManager = new LevelManager(Game.Content.Load<Texture2D>("levels/game_sprite_level"));
             level = levelManager.LoadLevel("Levels/SecondLevel.lvl");
             _positionManager = new PositionManager(level, _player);
-            Texture2D first = Game.Content.Load<Texture2D>("backgrounds/landscape1");
-            Texture2D second = Game.Content.Load<Texture2D>("backgrounds/landscape");
+            Texture2D first = Game.Content.Load<Texture2D>("backgrounds/level_background");
+            Texture2D second = Game.Content.Load<Texture2D>("backgrounds/level_background");
             scrolling1 = new Background(first, new Rectangle(0, 0, 1024, 768));
             scrolling2 = new Background(second, new Rectangle(1024, 0, 1024, 768));
             base.Initialize();
@@ -147,7 +148,6 @@ namespace AdventureGame.Main.Screens
                 _enemies.Add(new ScrollingEnemy(Game.Content.Load<Texture2D>("enemies/enemy1"), _player, 2));
             }
         }
-
 
         public override void Draw(GameTime gameTime)
         {

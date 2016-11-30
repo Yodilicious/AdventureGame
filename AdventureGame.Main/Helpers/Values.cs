@@ -1,16 +1,15 @@
-﻿namespace MonogameLevel
+﻿namespace MonogameLevel.Helpers
 {
     public static class Values
     {
-        public const int TileHeight = 27;
-        public const int TileWidth = 27;
+        public const int TileHeight = 64;
+        public const int TileWidth = 64;
 
         /// <summary>
         /// Constants for Life
         /// </summary>
         public const int StartLife = 3;
         public const int MaxLife = 10;
-
 
         /// <summary>
         /// Scores for items

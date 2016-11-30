@@ -61,18 +61,6 @@
 /processorParam:TextureFormat=Color
 /build:items/banana.fw.png
 
-#begin levels/game_sprite_level.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:levels/game_sprite_level.png
-
 #begin items/apple.fw.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -132,4 +120,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:backgrounds/main_menu_background.png
+
+#begin levels/game_sprite_level.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:levels/game_sprite_level.png
+
+#begin backgrounds/level_background.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:backgrounds/level_background.jpg
 
