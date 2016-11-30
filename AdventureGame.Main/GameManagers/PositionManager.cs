@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MonogameLevel.Helpers;
 
 namespace AdventureGame.Main.GameManagers
 {
@@ -16,8 +15,14 @@ namespace AdventureGame.Main.GameManagers
         private const int COL = 0;
         
         private readonly Dictionary<Vector2, Tile> _level;
+
         private Player _player;
         private int[] _position;
+        private Vector2[] _initialPosition = new Vector2[2]
+        {
+            new Vector2(100,100),
+            new Vector2(30, 10)
+        };
 
         public PositionManager(Dictionary<Vector2, Tile> level, Player player)
         {
@@ -41,8 +46,8 @@ namespace AdventureGame.Main.GameManagers
         {
             _position[ROW] = _player.getBoundToCheckCollision().Center.Y / Values.TileHeight;
             _position[COL] = (direction == MoveDirection.Left || direction == MoveDirection.RunningLeft) ?
-                _player.getBoundToCheckCollision().X / Values.TileWidth - 1 :
-                _player.getBoundToCheckCollision().X / Values.TileWidth + 1;
+                _player.getBoundToCheckCollision().Center.X / Values.TileWidth - 1 :
+                _player.getBoundToCheckCollision().Center.X  / Values.TileWidth + 1 ;
             int x = getXPosition(direction);
             int y = getYPosition(direction);
             return new Vector2(x, y);
@@ -54,24 +59,45 @@ namespace AdventureGame.Main.GameManagers
             return (_player.NowJumping) ? checkTop() :checkBottom();
         }
 
+        //private int checkBottom()
+        //{
+        //    _position[COL] = (_player.CurrentDirection == MoveDirection.Left || _player.CurrentDirection == MoveDirection.RunningLeft) ?
+        //        (_player.getBoundToCheckCollision().X + Values.TileWidth / 2 )/ Values.TileWidth : 
+        //        (_player.getBoundToCheckCollision().X - Values.TileWidth / 2) / Values.TileWidth + 1;
+        //    KeyValuePair<Vector2, Tile> tile = getTile(true);
+
+        //    int temp =  (tile.Value == null) ?
+        //        Values.FallenSpeed :
+        //        (int)Math.Min(Values.FallenSpeed, tile.Key.Y - (_player.getBoundToCheckCollision().Y + _player.getBoundToCheckCollision().Height));
+
+        //    if (temp == 0)
+        //    {
+        //        _player.IsDroped = false;
+        //    }
+        //    return temp;
+        //}
         private int checkBottom()
         {
-            _position[COL] = (_player.CurrentDirection == MoveDirection.Left || _player.CurrentDirection == MoveDirection.RunningLeft) ?
-                (_player.getBoundToCheckCollision().X + Values.TileWidth / 2 )/ Values.TileWidth: 
-                (_player.getBoundToCheckCollision().X - Values.TileWidth / 2) / Values.TileWidth + 1;
-            KeyValuePair<Vector2, Tile> tile = getTile(true);
+            int[] temp = new int[2];
+            KeyValuePair<Vector2, Tile> tile;
 
-            int temp =  (tile.Value == null) ?
-                Values.FallenSpeed :
-                (int)Math.Min(Values.FallenSpeed, tile.Key.Y - (_player.getBoundToCheckCollision().Y + _player.getBoundToCheckCollision().Height));
-
-            if (temp == 0)
+            for (int i = 0; i < 2; i++)
             {
-                _player.IsDroped = false;
+                _position[COL] = (_player.getBoundToCheckCollision().X + _player.getBoundToCheckCollision().Width * i) / Values.TileWidth;
+                tile = getTile();
+                temp[i] = (tile.Value == null) ?
+                    Values.JumpingSpeed :
+                    (int)Math.Min(Values.JumpingSpeed, tile.Key.Y - (_player.getBoundToCheckCollision().Y + _player.getBoundToCheckCollision().Height));
+                if (temp[i] == 0)
+                {
+                    _player.NowJumping = false;
+                    _player.IsDroped = false;
+                    break;
+                }
             }
-            return temp;
-        }
 
+            return Math.Min(temp[0], temp[1]);
+        }
         private int checkTop()
         {
             int[] temp = new int[2];
@@ -79,7 +105,7 @@ namespace AdventureGame.Main.GameManagers
 
             for(int i = 0; i < 2; i++)
             {
-                _position[COL] = _player.getBoundToCheckCollision().X / Values.TileWidth + i;
+                _position[COL] = (_player.getBoundToCheckCollision().X + _player.getBoundToCheckCollision().Width * i)/ Values.TileWidth;
                 tile = getTile();
                 temp[i] = (tile.Value == null) ?
                     -Values.JumpingSpeed :
@@ -94,8 +120,6 @@ namespace AdventureGame.Main.GameManagers
             
             return Math.Max(temp[0], temp[1]);
         }
-
-
 
         private int checkRight()
         {
@@ -134,18 +158,9 @@ namespace AdventureGame.Main.GameManagers
             return xPosition;
         }
 
-        //private void setDeathPosition()
-        //{
-        //    if (!_hitFlag)
-        //    {
-        //        _hitFlag = true;
-        //        beforeJumpHeight = _destinationRectangle.Y;
-        //    }
-
-        //    if (!IsDroped && beforeJumpHeight - maxJumpHeight <= _destinationRectangle.Y)
-        //        _destinationRectangle.Y -= (int)speed.Y * 8;
-        //    else
-        //        IsDroped = true;
-        //}
+        public Vector2 getInitialPosition(int stage)
+        {
+            return _initialPosition[stage];
+        }
     }
 }

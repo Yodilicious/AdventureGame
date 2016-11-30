@@ -103,6 +103,11 @@ namespace AdventureGame.Main.Characters
                 }
             }            
         }
+        public void setPosition(Vector2 pos)
+        {
+            _destinationRectangle.X = (int)pos.X;
+            _destinationRectangle.Y = (int)pos.Y;
+        }
 
         protected int getFrameIndex()
         {
@@ -128,7 +133,7 @@ namespace AdventureGame.Main.Characters
             return new Rectangle(
                 _destinationRectangle.X + 5,
                 _destinationRectangle.Y + 5,
-                _destinationRectangle.Width - 20,
+                _destinationRectangle.Width - 13,
                 _destinationRectangle.Height - 10
                 );
         }
