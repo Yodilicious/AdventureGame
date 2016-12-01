@@ -9,11 +9,19 @@ using System.Threading.Tasks;
 
 namespace AdventureGame.Main.GameManagers
 {
+    [Flags]
+    public enum PositionInScreen
+    {
+        Left,
+        Center,
+        Right
+    }
     public class PositionManager
     {
         private const int ROW = 1;
         private const int COL = 0;
-        
+
+        private int absoluteXPosition;
         private readonly Dictionary<Vector2, Tile> _level;
 
         private Player _player;
@@ -29,6 +37,7 @@ namespace AdventureGame.Main.GameManagers
             _level = level;
             _player = player;
             _position = new int[2];
+            absoluteXPosition = 0;
         }
 
         private void getPlayerYPositionIndex(bool nowJumping)
@@ -46,10 +55,11 @@ namespace AdventureGame.Main.GameManagers
         {
             _position[ROW] = _player.getBoundToCheckCollision().Center.Y / Values.TileHeight;
             _position[COL] = (direction == MoveDirection.Left || direction == MoveDirection.RunningLeft) ?
-                _player.getBoundToCheckCollision().Center.X / Values.TileWidth - 1 :
-                _player.getBoundToCheckCollision().Center.X  / Values.TileWidth + 1 ;
+                (_player.getBoundToCheckCollision().Center.X - absoluteXPosition) / Values.TileWidth - 1 :
+                (_player.getBoundToCheckCollision().Center.X - absoluteXPosition) / Values.TileWidth + 1 ;
             int x = getXPosition(direction);
             int y = getYPosition(direction);
+            
             return new Vector2(x, y);
         }
 
@@ -76,6 +86,7 @@ namespace AdventureGame.Main.GameManagers
         //    }
         //    return temp;
         //}
+
         private int checkBottom()
         {
             int[] temp = new int[2];
@@ -83,7 +94,7 @@ namespace AdventureGame.Main.GameManagers
 
             for (int i = 0; i < 2; i++)
             {
-                _position[COL] = (_player.getBoundToCheckCollision().X + _player.getBoundToCheckCollision().Width * i) / Values.TileWidth;
+                _position[COL] = (_player.getBoundToCheckCollision().X + _player.getBoundToCheckCollision().Width * i - absoluteXPosition) / Values.TileWidth;
                 tile = getTile();
                 temp[i] = (tile.Value == null) ?
                     Values.JumpingSpeed :
@@ -94,8 +105,11 @@ namespace AdventureGame.Main.GameManagers
                     _player.IsDroped = false;
                     break;
                 }
+                else
+                {
+                    _player.IsDroped = true;
+                }
             }
-
             return Math.Min(temp[0], temp[1]);
         }
         private int checkTop()
@@ -105,7 +119,7 @@ namespace AdventureGame.Main.GameManagers
 
             for(int i = 0; i < 2; i++)
             {
-                _position[COL] = (_player.getBoundToCheckCollision().X + _player.getBoundToCheckCollision().Width * i)/ Values.TileWidth;
+                _position[COL] = (_player.getBoundToCheckCollision().X - absoluteXPosition + _player.getBoundToCheckCollision().Width * i)/ Values.TileWidth;
                 tile = getTile();
                 temp[i] = (tile.Value == null) ?
                     -Values.JumpingSpeed :
@@ -134,7 +148,7 @@ namespace AdventureGame.Main.GameManagers
             KeyValuePair<Vector2, Tile> tile = getTile();
             return -((tile.Value == null) ?
                 ((_player.NowJumping || _player.IsDroped) ?  Values.JumpingSpeed: Values.MoveSpeed) :
-                (int)Math.Min(Values.MoveSpeed, _player.getBoundToCheckCollision().X - (tile.Key.X + Values.TileWidth)));
+                (int)Math.Min(Values.MoveSpeed, _player.getBoundToCheckCollision().X - absoluteXPosition- (tile.Key.X + Values.TileWidth)));
         }
 
         private KeyValuePair<Vector2, Tile> getTile(bool isDown = false)
@@ -158,9 +172,50 @@ namespace AdventureGame.Main.GameManagers
             return xPosition;
         }
 
+        public int convertToBackgroundDistance(Vector2 dist)
+        {
+            int xDist = 0;
+            switch (getPlayerPositionInScreen())
+            {
+                case PositionInScreen.Left:
+                    if (absoluteXPosition < 0 && dist.X < 0)
+                        xDist -= (int)dist.X;
+                    break;
+                case PositionInScreen.Center:
+                    break;
+                case PositionInScreen.Right:
+                    if (dist.X > 0)
+                        xDist -= (int)dist.X;
+                    break;
+                default:
+                    break;
+            }
+            absoluteXPosition += xDist;
+            if (absoluteXPosition > 0)
+                absoluteXPosition = 0;
+            
+            return xDist;
+        }
+
+        private PositionInScreen getPlayerPositionInScreen()
+        {
+            if (_player.getBoundToCheckCollision().X < Utility.Stage.X * 3 / 10)
+                return PositionInScreen.Left;
+            if (_player.getBoundToCheckCollision().X > Utility.Stage.X * 7 / 10)
+                return PositionInScreen.Right;
+            return PositionInScreen.Center;
+        }
+
+
         public Vector2 getInitialPosition(int stage)
         {
             return _initialPosition[stage];
+        }
+
+        public void Clear()
+        {
+            absoluteXPosition = 0;
+            _level.Clear();
         }
     }
 }

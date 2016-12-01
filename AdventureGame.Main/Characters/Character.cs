@@ -69,7 +69,6 @@ namespace AdventureGame.Main.Characters
             show();
         }
 
-
         public virtual void Initialize()
         {
             for (int i = 0; i < numFrames.Length; i++)

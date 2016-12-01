@@ -72,8 +72,8 @@ namespace AdventureGame.Main.Characters
 
         public void Update(MoveDirection direction, Vector2 distance)
         {
-            if (_enabled && ++tickCounter >= 16 / tickToUpdate)
-            {
+            //if (_enabled && ++tickCounter >= 16 / tickToUpdate)
+            //{
                 if (Life == 0)
                     hide();
                 tickCounter = 0;
@@ -102,7 +102,7 @@ namespace AdventureGame.Main.Characters
                 move(distance);
                 idxFrame = getFrameIndex();
                 previousDirection = currentDirection;
-            }
+            //}
         }
 
 
